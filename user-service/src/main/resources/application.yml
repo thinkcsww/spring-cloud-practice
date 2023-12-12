@@ -1,0 +1,64 @@
+server:
+  port: 0
+#  port: ${random.int(50000,50001)}
+#  address: 127.0.0.1
+
+spring:
+  application:
+    name: user-service
+
+#  rabbitmq:
+
+#  h2:
+#    console:
+#      enabled: true
+#      settings:
+#        web-allow-others: true
+#      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: update
+#  datasource:
+#    driver-class-name: org.mariadb.jdbc.Driver
+#    url: jdbc:mariadb://localhost:3306/mydb
+#    username: root
+#    password: 1234
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+
+greeting:
+  message: Welcome to the Simple E-commerce.
+
+logging:
+  level:
+    com.example.userservice.client: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, busrefresh, info, metrics, prometheus, httptrace
+  tracing:
+    sampling:
+      probability: 1.0
+    propagation:
+      type: b3
+      consume: b3
+      produce: b3_multi
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+
+
+#token:
+#  expiration_time: 86400000
+#  secret: user_token
